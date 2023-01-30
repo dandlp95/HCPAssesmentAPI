@@ -6,6 +6,6 @@ namespace HCPAssesmentAPI.Repositories
     {
         Task<IEnumerable<User>> GetAllUsers();
         Task<List<UsersJson>> GetAllUsersJsonPlaceholder();
-        string[] splitFullName(string fullName, string[] titles);
+
     }
 }

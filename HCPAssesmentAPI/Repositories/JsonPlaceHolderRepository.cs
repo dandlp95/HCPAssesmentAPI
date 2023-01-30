@@ -35,22 +35,21 @@ namespace HCPAssesmentAPI.Repositories
                 last_name = splitFullName(user.name, titles)[1],
                 company_name = user.company.name,
                 company_full_address = user.address.street + ", " + user.address.suite + ", " + user.address.city + ", " + user.address.zipcode,
-                phone = user.phone,
+                phone = formatPhoneNumber(user.phone, new string[] { "-", ".", "(", ")" }),
                 website = user.website
             });
 
             return users;
         }
 
-        
-
         public string[] splitFullName(string fullName, string[] titles)
         {
-            int wordCount = fullName.Split(' ').Length;
-            if(wordCount == 0) {
+            int wordCount = fullName.Split(" ").Length;
+            if (wordCount == 0)
+            {
                 return new string[] { " ", " " };
             }
-            if(wordCount == 1)
+            if (wordCount == 1)
             {
                 return new string[] { fullName, " " };
             }
@@ -66,6 +65,31 @@ namespace HCPAssesmentAPI.Repositories
 
             return new string[] { firstName, lastName };
         }
+
+        public string formatPhoneNumber(string phoneNumber, string[] unwantedChars)
+        {
+            if (phoneNumber.Contains("x"))
+            {
+                int xIndex = phoneNumber.IndexOf("x");
+                string substringToRemove = phoneNumber.Substring(xIndex);
+                phoneNumber = phoneNumber.Replace(substringToRemove, string.Empty);
+            }
+
+            foreach (string character in unwantedChars)
+            {
+                phoneNumber = phoneNumber.Replace(character, string.Empty);
+            }
+
+            if (phoneNumber.Length > 10)
+            {
+                phoneNumber = phoneNumber.Remove(0, 1);
+            }
+
+            phoneNumber = phoneNumber.Replace(" ", string.Empty);
+
+            return phoneNumber;
+        }
+
     }
 }
 
