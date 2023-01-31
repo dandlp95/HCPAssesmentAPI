@@ -1,5 +1,8 @@
 ﻿namespace HCPAssesmentAPI.Models
 {
+    /// <summary>
+    /// Model class to deserialize API response from jsonplaceholder API.
+    /// </summary>
     public class UsersJson
     {
         public string name { get; set; }

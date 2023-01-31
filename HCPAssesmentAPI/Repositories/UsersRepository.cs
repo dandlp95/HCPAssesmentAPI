@@ -4,6 +4,12 @@ using System.Text;
 
 namespace HCPAssesmentAPI.Repositories
 {
+    /// <summary>
+    /// Handles all API requests.
+    /// </summary>
+    /// <remarks>
+    /// Decouples API requests from controller class.
+    /// </remarks>
     public class UsersRepository : IUsersRepository
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -51,10 +57,19 @@ namespace HCPAssesmentAPI.Repositories
             StringContent bodyContent = new(requestBodyJson, Encoding.UTF8, "application/json");
 
             var response = await _HCPhttpClient.PostAsync(HCPUri, bodyContent);
-            
+
             return response;
         }
-
+        /// <summary>
+        /// Formats full name to comply with Home Care Pulse API format for first_name and last_name.
+        /// </summary>
+        /// <remarks>
+        /// This method assumes there are no middle names. All words after the first word will be assumed to be the last name.
+        /// </remarks>
+        /// <param name="fullName">String with the user's full name.</param>
+        /// <param name="titles">string array that includes titles that should be removed from the full name.
+        /// For example, Mr. or Mrs.</param>
+        /// <returns>Returns string array with 2 elements. First element is the first name and second one the last name.</returns>
         public string[] splitFullName(string fullName, string[] titles)
         {
             int wordCount = fullName.Split(" ").Length;
@@ -79,8 +94,20 @@ namespace HCPAssesmentAPI.Repositories
             return new string[] { firstName, lastName };
         }
 
+        /// <summary>
+        /// Formats user phone number to comply with Home Care Pulse API request format
+        /// </summary>
+        /// <remarks>
+        /// Method assumes phone extension will always be at the end.
+        /// Method assumes any final extra digits is the area code.
+        /// </remarks>
+        /// <param name="phoneNumber">single string containing phone number</param>
+        /// <param name="unwantedChars">Any characters to remove from phone number.</param>
+        /// <returns>single string containing properly formatted phone number</returns>
+
         public string formatPhoneNumber(string phoneNumber, string[] unwantedChars)
         {
+            // Next block of code removes phone extension.
             if (phoneNumber.Contains("x"))
             {
                 int xIndex = phoneNumber.IndexOf("x");
@@ -88,6 +115,7 @@ namespace HCPAssesmentAPI.Repositories
                 phoneNumber = phoneNumber.Replace(substringToRemove, string.Empty);
             }
 
+            // Loops through string and removes unwanted characters.
             foreach (string character in unwantedChars)
             {
                 phoneNumber = phoneNumber.Replace(character, string.Empty);
@@ -95,10 +123,13 @@ namespace HCPAssesmentAPI.Repositories
 
             phoneNumber = phoneNumber.Replace(" ", string.Empty);
 
-            if (phoneNumber.Length > 10)
+            // Any final extra digits are assumed to be the area code.
+            // It starts removing first string character until there are 10.
+            while (phoneNumber.Length > 10)
             {
                 phoneNumber = phoneNumber.Remove(0, 1);
             }
+
             return phoneNumber;
         }
 

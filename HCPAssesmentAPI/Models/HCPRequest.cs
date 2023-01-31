@@ -2,6 +2,9 @@
 
 namespace HCPAssesmentAPI.Models
 {
+    /// <summary>
+    /// Model Class to send Post request to Home Care Pulse API.
+    /// </summary>
     public class HCPRequest
     {
         [Required]

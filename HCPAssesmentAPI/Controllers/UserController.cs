@@ -10,15 +10,19 @@ namespace HCPAssesmentAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
-    {
+    {   
+        // UsersRepository will handle all API requests.
         private readonly IUsersRepository _jsonplaceholderRepo;
-        private readonly APIResponse _response;
+        // APIResponse Wraps API response metadata and results to keep the API response format consistent.
+        private readonly APIResponse _response; 
         public UserController(IUsersRepository jsonplaceholderRepo)
         {
             _jsonplaceholderRepo = jsonplaceholderRepo;
             _response = new();
         }
-        [HttpGet]
+
+        // Gets users from jsonplaceholder API.
+        [HttpGet] 
         public async Task<ActionResult<APIResponse>> GetJsonPlaceholderUsers()
         {
             try
@@ -36,7 +40,9 @@ namespace HCPAssesmentAPI.Controllers
                 return _response;
             }
         }
-        [HttpPost]
+
+        // Makes requests to Home Care Pulse API.
+        [HttpPost] 
         public async Task<ActionResult<APIResponse>> PostUsers([FromBody] HCPRequest request)
         {
             try

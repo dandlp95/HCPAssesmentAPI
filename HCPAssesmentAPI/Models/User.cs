@@ -1,5 +1,9 @@
 ﻿namespace HCPAssesmentAPI.Models
 {
+    /// <summary>
+    /// Model class to comply with the format required by the Home Care Pulse API.
+    /// Users fetched from jsonplaceholder API will be transformed into this model.
+    /// </summary>
     public class User
     {
         public string first_name { get; set; }

@@ -2,6 +2,13 @@
 
 namespace MagicVilla_VillaAPI.Models
 {
+    /// <summary>
+    /// Wraps API responses results and metadata.
+    /// </summary>
+    /// <remarks>
+    /// Since this API works with other 2 other third-party API's, this class will
+    /// work as a wrapper to keep API response consistent.
+    /// </remarks>
     public class APIResponse
     {
         public HttpStatusCode StatusCode { get; set; }
