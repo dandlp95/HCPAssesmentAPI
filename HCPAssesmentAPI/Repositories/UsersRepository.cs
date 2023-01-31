@@ -20,7 +20,11 @@ namespace HCPAssesmentAPI.Repositories
             _HCPhttpClient = httpClientFactory.CreateClient();
         }
 
-        public async Task<List<UsersJson>> GetAllUsersJsonPlaceholder()
+        /// <summary>
+        /// Gets list of users from jsonplaceholder api
+        /// </summary>
+        /// <returns>Returns deserialized data</returns>
+        public async Task<List<UserJson>> GetUsersJsonPlaceholder()
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "https://jsonplaceholder.typicode.com/users");
             request.Headers.Add("Accept", "application/json");
@@ -29,14 +33,18 @@ namespace HCPAssesmentAPI.Repositories
 
             string res = response.Content.ReadAsStringAsync().Result;
 
-            return JsonConvert.DeserializeObject<List<UsersJson>>(res);
+            return JsonConvert.DeserializeObject<List<UserJson>>(res);
         }
 
+        /// <summary>
+        /// Transforms list of UserJson objects into User objects
+        /// </summary>
+        /// <returns>List of User model objects</returns>
         public async Task<IEnumerable<User>> GetAllUsers()
         {
             string[] titles = { "Mr.", "Mrs." };
 
-            List<UsersJson> data = await GetAllUsersJsonPlaceholder();
+            List<UserJson> data = await GetUsersJsonPlaceholder();
             IEnumerable<User> users = data.Select(user => new User
             {
                 first_name = splitFullName(user.name, titles)[0],

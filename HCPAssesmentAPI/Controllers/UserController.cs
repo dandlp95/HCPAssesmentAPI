@@ -50,10 +50,10 @@ namespace HCPAssesmentAPI.Controllers
                 var response = await _jsonplaceholderRepo.PostUsers(request);
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    string res = response.Content.ReadAsStringAsync().Result;
-                    dynamic deserialized = JsonConvert.DeserializeObject<SuccessResponse>(res);
+                    string responseString = response.Content.ReadAsStringAsync().Result;
+                    dynamic deserializedResponse = JsonConvert.DeserializeObject<SuccessResponse>(responseString);
                     _response.StatusCode = response.StatusCode;
-                    _response.Result = deserialized;
+                    _response.Result = deserializedResponse;
                     return _response;
                 }
                 else

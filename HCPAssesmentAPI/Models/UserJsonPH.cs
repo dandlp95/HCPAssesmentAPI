@@ -3,7 +3,7 @@
     /// <summary>
     /// Model class to deserialize API response from jsonplaceholder API.
     /// </summary>
-    public class UsersJson
+    public class UserJson
     {
         public string name { get; set; }
         public Company company { get; set; }

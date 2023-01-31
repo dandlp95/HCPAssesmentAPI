@@ -5,7 +5,7 @@ namespace HCPAssesmentAPI.Repositories
     public interface IUsersRepository
     {
         Task<IEnumerable<User>> GetAllUsers();
-        Task<List<UsersJson>> GetAllUsersJsonPlaceholder();
+        Task<List<UserJson>> GetUsersJsonPlaceholder();
         Task<HttpResponseMessage> PostUsers(HCPRequest request); 
     }
 }
