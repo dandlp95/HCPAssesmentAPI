@@ -1,14 +1,17 @@
 ﻿using HCPAssesmentAPI.Models;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace HCPAssesmentAPI.Repositories
 {
-    public class JsonPlaceHolderRepository : IJsonPlaceHolderRepository
+    public class UsersRepository : IUsersRepository
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        public JsonPlaceHolderRepository(IHttpClientFactory httpClientFactory)
+        private readonly HttpClient _HCPhttpClient;
+        public UsersRepository(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
+            _HCPhttpClient = httpClientFactory.CreateClient();
         }
 
         public async Task<List<UsersJson>> GetAllUsersJsonPlaceholder()
@@ -16,8 +19,7 @@ namespace HCPAssesmentAPI.Repositories
             var request = new HttpRequestMessage(HttpMethod.Get, "https://jsonplaceholder.typicode.com/users");
             request.Headers.Add("Accept", "application/json");
 
-            var httpClient = _httpClientFactory.CreateClient();
-            var response = await httpClient.SendAsync(request);
+            var response = await _HCPhttpClient.SendAsync(request);
 
             string res = response.Content.ReadAsStringAsync().Result;
 
@@ -40,6 +42,17 @@ namespace HCPAssesmentAPI.Repositories
             });
 
             return users;
+        }
+
+        public async Task<HttpResponseMessage> PostUsers(HCPRequest request)
+        {
+            string HCPUri = "https://dev.app.homecarepulse.com/Primary/?FlowId=7423bd80-cddb-11ea-9160-326dddd3e106&Action=api";
+            string requestBodyJson = JsonConvert.SerializeObject(request);
+            StringContent bodyContent = new(requestBodyJson, Encoding.UTF8, "application/json");
+
+            var response = await _HCPhttpClient.PostAsync(HCPUri, bodyContent);
+            
+            return response;
         }
 
         public string[] splitFullName(string fullName, string[] titles)
@@ -80,15 +93,15 @@ namespace HCPAssesmentAPI.Repositories
                 phoneNumber = phoneNumber.Replace(character, string.Empty);
             }
 
+            phoneNumber = phoneNumber.Replace(" ", string.Empty);
+
             if (phoneNumber.Length > 10)
             {
                 phoneNumber = phoneNumber.Remove(0, 1);
             }
-
-            phoneNumber = phoneNumber.Replace(" ", string.Empty);
-
             return phoneNumber;
         }
+
 
     }
 }
